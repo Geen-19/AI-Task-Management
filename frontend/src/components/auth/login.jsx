@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Login = () => {
@@ -8,7 +8,7 @@ const Login = () => {
     password: ''
   });
   const [error, setError] = useState('');
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { email, password } = formData;
 
@@ -22,7 +22,7 @@ const Login = () => {
       const response = await axios.post('http://localhost:8080/login', { username: email, password });
       const { token } = response.data;
       localStorage.setItem('token', token);
-      history.push('/dashboard');
+      navigate('/dashboard');
     } catch (err) {
       setError('Invalid credentials');
     }

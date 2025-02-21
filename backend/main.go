@@ -10,6 +10,7 @@ import (
 
 	"ai-task-management-system/backend/routes"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -53,6 +54,14 @@ func main() {
 
 	// Initialize Gin router
 	router := gin.Default()
+
+	// Enable CORS for all routes
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Authorization", "Content-Type"},
+		AllowCredentials: true,
+	}))
 
 	// Set up routes
 	routes.SetupAuthRoutes(router, db)

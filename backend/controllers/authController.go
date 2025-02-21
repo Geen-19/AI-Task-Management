@@ -4,6 +4,7 @@ import (
 	"ai-task-management-system/backend/models"
 	"context"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -94,8 +95,12 @@ func (ac *AuthController) Authenticate(c *gin.Context) {
 	tokenString := c.GetHeader("Authorization")
 	if tokenString == "" {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Missing token"})
+		c.Abort()
 		return
 	}
+
+	// Remove "Bearer " prefix from the token string
+	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
 
 	claims := &Claims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
@@ -103,6 +108,7 @@ func (ac *AuthController) Authenticate(c *gin.Context) {
 	})
 	if err != nil || !token.Valid {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+		c.Abort()
 		return
 	}
 

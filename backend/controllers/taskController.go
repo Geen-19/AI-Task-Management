@@ -23,7 +23,6 @@ func (tc *TaskController) CreateTask(c *gin.Context) {
 		return
 	}
 	task.ID = primitive.NewObjectID().Hex()
-	task.Status = "Pending"
 	task.CreatedAt = time.Now()
 	task.UpdatedAt = time.Now()
 
