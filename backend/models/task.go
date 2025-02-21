@@ -2,16 +2,19 @@ package models
 
 import (
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Task struct {
-	ID          string    `json:"id" gorm:"primaryKey"`
-	Title       string    `json:"title"`
-	Description string    `json:"description"`
-	AssignedTo  string    `json:"assigned_to"`
-	Status      string    `json:"status"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	ID          string `json:"id" gorm:"primaryKey"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	AssignedTo  string `json:"assigned_to"`
+
+	Status    string    `json:"status"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func (t *Task) CreateTask(db *gorm.DB) error {

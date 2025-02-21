@@ -26,17 +26,18 @@ func main() {
 	dbName := os.Getenv("MONGO_DB_NAME")
 
 	// Connect to MongoDB
-	client, err := mongo.NewClient(options.Client().ApplyURI(mongoURI))
-	if err != nil {
-		log.Fatalf("Failed to create MongoDB client: %v", err)
-	}
-
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	err = client.Connect(ctx)
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoURI))
 	if err != nil {
 		log.Fatalf("Failed to connect to MongoDB: %v", err)
+	}
+
+	// Check the connection
+	err = client.Ping(ctx, nil)
+	if err != nil {
+		log.Fatalf("Failed to ping MongoDB: %v", err)
 	}
 
 	db := client.Database(dbName)
