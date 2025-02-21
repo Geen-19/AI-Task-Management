@@ -1,30 +1,56 @@
 package main
 
 import (
-    "github.com/gin-gonic/gin"
-    "github.com/joho/godotenv"
-    "log"
-    "os"
-    "ai-task-management-system/backend/routes"
+	"context"
+	"log"
+	"os"
+	"time"
+
+	"ai-task-management-system/backend/routes"
+
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func main() {
-    // Load environment variables from .env file
-    err := godotenv.Load()
-    if err != nil {
-        log.Fatal("Error loading .env file")
-    }
+	// Load environment variables from .env file
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
 
-    // Initialize Gin router
-    router := gin.Default()
+	// Get MongoDB connection details from environment variables
+	mongoURI := os.Getenv("MONGO_URI")
+	dbName := os.Getenv("MONGO_DB_NAME")
 
-    // Set up routes
-    routes.SetupTaskRoutes(router)
+	// Connect to MongoDB
+	client, err := mongo.NewClient(options.Client().ApplyURI(mongoURI))
+	if err != nil {
+		log.Fatalf("Failed to create MongoDB client: %v", err)
+	}
 
-    // Start the server
-    port := os.Getenv("PORT")
-    if port == "" {
-        port = "8080" // Default port
-    }
-    router.Run(":" + port)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	err = client.Connect(ctx)
+	if err != nil {
+		log.Fatalf("Failed to connect to MongoDB: %v", err)
+	}
+
+	db := client.Database(dbName)
+
+	// Initialize Gin router
+	router := gin.Default()
+
+	// Set up routes
+	routes.TaskRoutes(router, db)
+
+	// Start the server
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Default port
+	}
+	router.Run(":" + port)
 }
