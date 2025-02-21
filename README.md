@@ -2,6 +2,10 @@
 
 This is an AI Task Management System built with a React frontend and a Go backend. The system allows users to create, manage, and update tasks with various statuses and priorities.
 
+## Deployment 
+ - Frontend - https://lustrous-khapse-edb906.netlify.app/
+ - Backend - https://ai-task-management-3.onrender.com
+
 ## Features
 
 - User authentication (registration and login)
