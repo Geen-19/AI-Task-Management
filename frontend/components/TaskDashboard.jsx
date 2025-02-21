@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 
-const TaskDashboard: React.FC = () => {
+const TaskDashboard = () => {
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(true);
     const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL || '');
