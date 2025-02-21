@@ -1,12 +1,14 @@
 package routes
 
 import (
-	"github.com/gin-gonic/gin"
 	"ai-task-management-system/backend/controllers"
+
+	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func SetupTaskRoutes(router *gin.Engine) {
-	taskController := controllers.TaskController{}
+func SetupTaskRoutes(router *gin.Engine, db *mongo.Database) {
+	taskController := controllers.TaskController{DB: db}
 
 	router.POST("/tasks", taskController.CreateTask)
 	router.GET("/tasks", taskController.GetTasks)
